@@ -1,3 +1,7 @@
+<?php
+include("db.php");
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -59,11 +63,21 @@ if(isset($_POST["signup"]) && isset($_POST["signupEmail"]) && isset($_POST["sign
   $pw = $_POST["signupPassword"];
   $pw2 = $_POST["signupPassword2"];
 
+    // CHECK IF EVERY FIELD ARE FILLED
   if($email == "" || $pw == "" || $pw2 == ""){
+    // SHOW WARNING
     echo "please fill all the areas";
   }else{
+    // IF PASSWORD MATCHING
     if($pw == $pw2){
-      echo "we  will do the insertion here";
+      $sql = "INSERT INTO users (email, password) VALUES ('".$email."' , '".$pw."')";
+
+        //CHECK IF RECORD SUCCESFUL
+        if(mysqli_query($conn, $sql)){
+          echo "new user recorded";
+        }else{
+          echo "Error : " . $sql . "<br>" . mysqli_error($conn);
+        }
     }else{
       echo "password dont match";
     }
