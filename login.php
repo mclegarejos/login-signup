@@ -25,19 +25,14 @@ include("db.php");
         <form class="form" method="post">
             <div class="form-group">
                 <label>Email address</label>
-                <input type="email" class="form-control" name="signupEmail" aria-describedby="emailHelp">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                <input type="email" class="form-control" name="loginEmail" aria-describedby="emailHelp">
             </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" class="form-control" name="signupPassword">
+                    <input type="password" class="form-control" name="loginPassword">
                 </div>
-                    <div class="form-group">
-                        <label>Password Again</label>
-                        <input type="password" class="form-control" name="signupPassword2">
-                    </div>
-                      <a href="login.php">Are you already a member?</a><br>
-                        <button name="signup" type="submit" class="btn btn-primary">Signup</button>
+                      <a href="index.php">Don't you have an account?</a><br>
+                        <button name="login" type="submit" class="btn btn-primary">Login</button>
         </form>
     </div>
 
@@ -59,32 +54,26 @@ include("db.php");
 </html>
 
 <?php
-if(isset($_POST["signup"]) && isset($_POST["signupEmail"]) && isset($_POST["signupPassword"]) && isset($_POST["signupPassword2"])){
+if(isset($_POST["login"]) && isset($_POST["loginEmail"]) && isset($_POST["loginPassword"])){
   
-  $email = $_POST["signupEmail"];
-  $pw = $_POST["signupPassword"];
-  $pw2 = $_POST["signupPassword2"];
+  $email = $_POST["loginEmail"];
+  $pw = $_POST["loginPassword"];
 
     // CHECK IF EVERY FIELD ARE FILLED
-  if($email == "" || $pw == "" || $pw2 == ""){
+  if($email == "" || $pw == ""){
     // SHOW WARNING
     echo "please fill all the areas";
   }else{
-    // IF PASSWORD MATCHING
-    if($pw == $pw2){
-      $sql = "INSERT INTO users (email, password) VALUES ('".$email."' , '".$pw."')";
-
-        //CHECK IF RECORD SUCCESFUL
-        if(mysqli_query($conn, $sql)){
-          // WELCOME USER NEXT PAGE
-          $_SESSION["user"] = $email;
-          header("Location: welcome.php");
+    //CHECK IF USER EXISTS
+    $sql = "SELECT * FROM users WHERE email = '".$email."' AND password = '".$pw."'";
+    $result = mysqli_query($conn, $sql);
+        if(mysqli_num_rows($result)>0){
+            $_SESSION["user"] = $email;
+            header("Location: welcome.php");
         }else{
-          echo "Error : " . $sql . "<br>" . mysqli_error($conn);
+            echo "User not found";
         }
-    }else{
-      echo "password dont match";
-    }
+
   }
 }
 
