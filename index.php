@@ -75,6 +75,7 @@ if(isset($_POST["signup"]) && isset($_POST["signupEmail"]) && isset($_POST["sign
 
         //CHECK IF RECORD SUCCESFUL
         if(mysqli_query($conn, $sql)){
+          // WELCOME USER NEXT PAGE
           $_SESSION["user"] = $email;
           header("Location: welcome.php");
         }else{
